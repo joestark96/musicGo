@@ -18,6 +18,7 @@ import { CircleOfFifthsPage } from './pages/CircleOfFifthsPage';
 import { TheoryPage } from './pages/TheoryPage';
 import { FlashcardsPage } from './pages/FlashcardsPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { LandingPage } from './pages/LandingPage';
 
 // Ionic core CSS
 import '@ionic/react/css/core.css';
@@ -30,7 +31,12 @@ setupIonicReact({
 });
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<NavTab>('roadmap');
+  const [activeTab, setActiveTab] = useState<NavTab>(() => {
+    if (typeof window !== 'undefined' && (window.location.search.includes('landing') || window.location.hash.includes('landing'))) {
+      return 'landing';
+    }
+    return 'roadmap';
+  });
   const [profile, setProfile] = useState<UserProfile>(() => storageService.getProfile());
   const [activeQuizLesson, setActiveQuizLesson] = useState<LessonNode | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(() => {
@@ -112,6 +118,8 @@ export const App: React.FC = () => {
             onProfileUpdate={(updated) => setProfile(updated)}
           />
         );
+      case 'landing':
+        return <LandingPage onStartApp={() => setActiveTab('roadmap')} />;
       default:
         return null;
     }
@@ -119,12 +127,15 @@ export const App: React.FC = () => {
 
   return (
     <IonApp>
-      <TopBar
-        profile={profile}
-        darkMode={darkMode}
-        onToggleDarkMode={handleToggleDarkMode}
-        onRefillHearts={handleRefillHearts}
-      />
+      {activeTab !== 'landing' && (
+        <TopBar
+          profile={profile}
+          darkMode={darkMode}
+          onToggleDarkMode={handleToggleDarkMode}
+          onRefillHearts={handleRefillHearts}
+          onOpenLanding={() => setActiveTab('landing')}
+        />
+      )}
 
       <IonContent fullscreen className="bg-[#f7f7f7] dark:bg-[#131f24]">
         <main className="min-h-full">
@@ -132,10 +143,12 @@ export const App: React.FC = () => {
         </main>
       </IonContent>
 
-      <BottomNav
-        activeTab={activeTab}
-        onTabChange={(tab) => setActiveTab(tab)}
-      />
+      {activeTab !== 'landing' && (
+        <BottomNav
+          activeTab={activeTab}
+          onTabChange={(tab) => setActiveTab(tab)}
+        />
+      )}
 
       {/* Quiz Modal if a lesson is running */}
       {activeQuizLesson && (

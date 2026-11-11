@@ -9,7 +9,8 @@ import {
   BookOpen,
   Layers,
   User,
-  MoreHorizontal
+  MoreHorizontal,
+  Smartphone
 } from 'lucide-react';
 import { sound } from '../services/sound';
 
@@ -22,7 +23,8 @@ export type NavTab =
   | 'circle'
   | 'theory'
   | 'flashcards'
-  | 'profile';
+  | 'profile'
+  | 'landing';
 
 interface BottomNavProps {
   activeTab: NavTab;
@@ -65,6 +67,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange }) 
     { id: 'theory' as NavTab, label: 'Manual de Teoría', desc: 'Guía completa con ejemplos sonoros', icon: BookOpen, color: 'text-sky-500 bg-sky-50 dark:bg-sky-950/40' },
     { id: 'flashcards' as NavTab, label: 'Flashcards de Repaso', desc: 'Tarjetas interactivas de símbolos y ritmo', icon: Layers, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-950/40' },
     { id: 'profile' as NavTab, label: 'Mi Perfil y Logros', desc: 'Estadísticas, insignias y racha', icon: User, color: 'text-purple-500 bg-purple-50 dark:bg-purple-950/40' },
+    { id: 'landing' as NavTab, label: 'Landing Page & APK', desc: 'Página oficial y descarga directa de APK v1.0.0', icon: Smartphone, color: 'text-teal-500 bg-teal-50 dark:bg-teal-950/40' },
   ];
 
   const isMoreActive = moreTabs.some(t => t.id === activeTab);
